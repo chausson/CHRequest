@@ -8,10 +8,11 @@
 
 import Foundation
 import Result
+import HandyJSON
 
 public protocol CHRequestable{
     /// return  Object of type
-    associatedtype R
+    associatedtype R:HandyJSON
     
     /// Request Path append path to host
     var path: String { get }
@@ -52,7 +53,13 @@ public extension CHRequestable{
         return ""
     }
     var encoding: ParameterEncoding {
-        return URLEncoding.default
+        switch method {
+        case .get:
+            return URLEncoding.default
+        default:
+            return JSONEncoding.default
+
+        }
     }
     func headers() -> [String: String] {
         return [ : ]

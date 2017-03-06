@@ -10,7 +10,7 @@ import Foundation
 import HandyJSON
 import CHRequest
 
-struct LoginRequest<Type>:CHRequestable,SimplerConfigable {
+struct LoginRequest<Type:HandyJSON>:CHRequestable,SimplerConfigable {
     var userName:String?
     var password:String?
     typealias R = Type

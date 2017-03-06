@@ -14,29 +14,24 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         config.add(["password":"OOOXXXXX"])
-//        normalRequest()
-        jsonRequest()
     }
-    func normalRequest() {
-//        Simpler<User>(l).request { result in
-//            if case let .success(response) = result {
-//                print("\nStr = \(response.jsonString) +\nObj = \(response.json)")
-//            }
-//        }
-    }
-    func jsonRequest() {
+    @IBAction func normalRequest(_ sender: UIButton) {
         l.request { result in
             if case let .success(response) = result {
-                print("\nStr = \(response.jsonString) \nDebug = \(response.debugDescription)")
+                print("\nStr = \(response.jsonString)")
             }
-
+            if case let .failure(error) = result{
+                print("\nDebug = \(error.response.debugDescription)")
+            }
+            
         }
-//        Handyer<User>(l).requestJSON { (result) in
-//            if case let .success(response) = result {
-//                print("\nStr = \(response.jsonString) +\nObj = \(response.jsonModel?.code) \nDebug = \(response.debugDescription)")
-//            }
-//        }
     }
+    @IBAction func jsonRequest(_ sender: UIButton) {
+        l.requestJSON { user in
+            print("\nUser = \(user)")
+        }
+    }
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

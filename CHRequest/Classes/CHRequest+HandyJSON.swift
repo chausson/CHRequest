@@ -29,25 +29,40 @@ import Result
 //    
 //    
 //}
-extension CHRequestable where Self:SimplerConfigable{
-    func requestJSON(_ completion: @escaping  Completion) -> DataRequest{
-        let dataRequest = self.request { result in
+public final class HandyResponse<Type:HandyJSON>:Response{
+    public var jsonModel: Type?{
+        get{
+            guard let obj = Type.deserialize(from: self.jsonString) else {
+                return nil
+            }
+            return obj
             
+        }
+    }
+    
+}
+public extension CHRequestable where Self:SimplerConfigable{
+    @discardableResult
+    func requestJSON(_ completion: @escaping (_ result:R?)->()) -> DataRequest{
+        let dataRequest = self.request { result in
+            if case let .success(response) = result{
+            let r = HandyResponse<R>(statusCode: response.statusCode, data: response.data ?? Data(), request: response.request, response: response.response,requestParm:response.requestParm)
+                if let model = r.jsonModel{
+                    completion(model)
+                }else{
+                    debugPrint("RequestJSON Error Reason is :\(r.debugDescription)")
+                    completion(nil)
+
+                }
+            }
+            if case let .failure(error) = result{
+                debugPrint("RequestJSON Error Reason is :\(error)")
+                completion(nil)
+            }
         }
         return  dataRequest
 
     }
 }
-//public final class HandyResponse<Type:HandyJSON>:Response{
-//    public var jsonModel: Type?{
-//        get{
-//            guard let obj = Type.deserialize(from: self.jsonString) else {
-//                return nil
-//            }
-//            return obj
-//            
-//        }
-//    }
-//
-//}
+
 

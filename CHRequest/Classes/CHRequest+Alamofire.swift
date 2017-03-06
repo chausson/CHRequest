@@ -8,7 +8,7 @@
 
 import Foundation
 import Alamofire
-
+public typealias JSONEncoding = Alamofire.JSONEncoding
 public typealias HTTPMethod = Alamofire.HTTPMethod
 public typealias Manager = Alamofire.SessionManager
 public typealias URLEncoding = Alamofire.URLEncoding

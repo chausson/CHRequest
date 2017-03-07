@@ -10,25 +10,6 @@ import Foundation
 import HandyJSON
 import Result
 
-//public final class Handyer<ResultType:HandyJSON>:Simpler<ResultType>{
-//    public typealias HandyCompletion = (_ result: Result<HandyResponse<R>,Error>) -> ()
-//    
-//    @discardableResult
-//    open func requestJSON(_ completion: @escaping HandyCompletion) -> DataRequest{
-//        let dataRequest =  self.requestNormal(self.target) { (result) in
-//            if case let .success(response) = result{
-//                let r = HandyResponse<R>(statusCode: response.statusCode, data: response.data ?? Data(), request: response.request, response: response.response,requestParm:response.requestParm)
-//                completion(.success(r))
-//            }
-//            if case let .failure(error) = result{
-//                completion(.failure(error))
-//            }
-//        }
-//        return  dataRequest
-//    }
-//    
-//    
-//}
 public final class HandyResponse<Type:HandyJSON>:Response{
     public var jsonModel: Type?{
         get{
@@ -46,7 +27,7 @@ public extension CHRequestable where Self:SimplerConfigable{
     func requestJSON(_ completion: @escaping (_ result:R?)->()) -> DataRequest{
         let dataRequest = self.request { result in
             if case let .success(response) = result{
-            let r = HandyResponse<R>(statusCode: response.statusCode, data: response.data ?? Data(), request: response.request, response: response.response,requestParm:response.requestParm)
+            let r = HandyResponse<R>(statusCode: response.statusCode, data: response.data, request: response.request, response: response.response,requestParm:response.requestParm)
                 if let model = r.jsonModel{
                     completion(model)
                 }else{

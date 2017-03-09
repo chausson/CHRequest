@@ -12,7 +12,7 @@ import Result
 public typealias ResultType = Result<Response, Error>
 public typealias ResponseHandler = (DefaultDataResponse) -> Void
 public typealias RequestCompletion = (_ result:ResultType)->()
-public typealias DownloadCompletion = (Data) -> Void
+public typealias DownloadCompletion = (Data,URL) -> Void
 public extension CHRequestable where Self:SimplerConfigable{
     
     
@@ -37,13 +37,6 @@ public extension CHRequestable where Self:SimplerConfigable{
         dataRequest.response(completionHandler: defultResponseHandler)
         return dataRequest
     }
-//    
-//    @discardableResult
-//    func upload() -> UploadRequest {
-//        let uploadRequest = uploadNormal()
-//        return uploadRequest
-//
-//    }
 }
 public extension CHDownloadRequestable where Self:SimplerConfigable{
         @discardableResult
@@ -53,8 +46,9 @@ public extension CHDownloadRequestable where Self:SimplerConfigable{
             let downloadRequest = downloadNormal(baseInfo.url, method: self.method, parameters: baseInfo.parms, encoding: self.encoding, headers: baseInfo.headFields, fileName: self.fileName).downloadProgress { (progress) in
                 
             }.responseData { (response) in
-                if let data = response.result.value {
-                    completion(data)
+                
+                if let data = response.result.value ,let url = response.destinationURL{
+                    completion(data,url)
                 }
             }
     
@@ -69,8 +63,9 @@ public extension CHDownloadRequestable where Self:SimplerConfigable{
                         progressClosure(progress)
                     }
                 }.responseData { (response) in
-                    if let data = response.result.value {
-                        completion(data)
+
+                    if let data = response.result.value ,let url = response.destinationURL{
+                        completion(data,url)
                     }
             }
             
@@ -78,6 +73,15 @@ public extension CHDownloadRequestable where Self:SimplerConfigable{
         }
 
     
+}
+public extension CHUploadRequestable where Self:CHDownloadRequestable{
+
+//    @discardableResult
+//    func upload() -> UploadRequest {
+//        let uploadRequest = uploadNormal()
+//        return uploadRequest
+//
+//    }
 }
 private func obtainBaseInfo<T:CHRequestable&SimplerConfigable>(target:T)
     -> (url:String,parms:[String :Any],headFields:[String :String]){

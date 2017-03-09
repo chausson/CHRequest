@@ -37,6 +37,9 @@ public protocol CHDownloadRequestable:CHRequestable{
     var fileName: String { get }
 }
 
+public protocol CHUploadRequestable:CHRequestable{
+    
+}
 public protocol CHDownloadResumeRequestable: CHDownloadRequestable {
     var resumeData: Data { get }
 }

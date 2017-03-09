@@ -13,7 +13,7 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var pic: UIImageView!
     let l = LoginRequest<User>(userName: "18116342840", password: "123456")
-    let data = ["Noraml Request","JSON Reuqest","Download Reuqest"]
+    let data = ["Noraml Request","JSON Reuqest","Download Reuqest","Upload Request"]
     override func viewDidLoad() {
         super.viewDidLoad()
         config.add(["password":"OOOXXXXX"])
@@ -38,10 +38,14 @@ class ViewController: UIViewController {
         let imageAPI = ImageDownloadAPI()
         imageAPI.download(progressClosure: { (progress) in
             print("Download Progress:\(progress.completedUnitCount)\n All Data:\(progress.totalUnitCount)")
-        }) { [weak self] (data) in
+        }) { [weak self] (data,url) in
+            debugPrint("[Download destinationURL:\(url)]")
             let image = UIImage(data: data)
             self?.pic.image = image
         }
+    }
+    func uploadRequest() {
+        let data = UIImage(named:"icon")
     }
 }
 extension ViewController:UITableViewDataSource,UITableViewDelegate{

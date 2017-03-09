@@ -21,37 +21,31 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="v0Z-iG-d4N">
-                                <rect key="frame" x="129" y="350" width="116" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="116" id="HaI-2C-iEk"/>
-                                    <constraint firstAttribute="height" constant="30" id="twX-vd-EHp"/>
-                                </constraints>
-                                <state key="normal" title="JSON Request"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="0rF-NY-Qee">
+                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <connections>
-                                    <action selector="jsonRequest:" destination="BYZ-38-t0r" eventType="touchUpInside" id="4Ki-Jn-GT9"/>
+                                    <outlet property="dataSource" destination="BYZ-38-t0r" id="Jvq-q5-VYg"/>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="y0f-fH-R78"/>
                                 </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LQR-fX-NMb">
-                                <rect key="frame" x="122" y="251" width="116" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="Tb9-Ao-afl"/>
-                                    <constraint firstAttribute="width" constant="116" id="jHz-oo-cbs"/>
-                                </constraints>
-                                <state key="normal" title="Normal Request"/>
-                                <connections>
-                                    <action selector="normalRequest:" destination="BYZ-38-t0r" eventType="touchUpInside" id="dU8-7m-K8U"/>
-                                </connections>
-                            </button>
+                            </tableView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6Cd-Xf-6da">
+                                <rect key="frame" x="278" y="304" width="89" height="82"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="LQR-fX-NMb" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" constant="-7.5" id="2P0-K8-SwQ"/>
-                            <constraint firstItem="v0Z-iG-d4N" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Kcz-qb-giN"/>
-                            <constraint firstItem="LQR-fX-NMb" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="231" id="QI4-6y-TW5"/>
-                            <constraint firstItem="v0Z-iG-d4N" firstAttribute="top" secondItem="LQR-fX-NMb" secondAttribute="bottom" constant="69" id="pgi-eS-Q8a"/>
+                            <constraint firstAttribute="trailing" secondItem="0rF-NY-Qee" secondAttribute="trailing" id="7WY-xG-nvq"/>
+                            <constraint firstItem="0rF-NY-Qee" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="8jf-Do-kiq"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="0rF-NY-Qee" secondAttribute="bottom" id="QbZ-Kg-av8"/>
+                            <constraint firstItem="0rF-NY-Qee" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="qyc-NV-bqc"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="pic" destination="6Cd-Xf-6da" id="XrM-xA-eah"/>
+                        <outlet property="tableView" destination="0rF-NY-Qee" id="KnZ-2h-IO8"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>

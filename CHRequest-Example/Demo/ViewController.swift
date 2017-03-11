@@ -12,14 +12,16 @@ class ViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     
     @IBOutlet weak var pic: UIImageView!
-    let l = LoginRequest<User>(userName: "18116342840", password: "123456")
+    let lRequest = LoginRequest<User>(userName: "18116342840", password: "123456")
+    let lAPI = LoginAPI(userName: "18116342840", password: "123456")
+    
     let data = ["Noraml Request","JSON Reuqest","Download Reuqest","Upload Request"]
     override func viewDidLoad() {
         super.viewDidLoad()
         config.add(["password":"OOOXXXXX"])
     }
     func normalRequest() {
-        l.request { result in
+        lAPI.request { result in
             if case let .success(response) = result {
                 print("\nStr = \(response.jsonString)")
             }
@@ -30,7 +32,7 @@ class ViewController: UIViewController {
         }
     }
     func jsonRequest() {
-        l.requestJSON { user in
+        lRequest.requestJSON { user in
             print("\nUser = \(user)")
         }
     }
@@ -45,7 +47,21 @@ class ViewController: UIViewController {
         }
     }
     func uploadRequest() {
-        let data = UIImage(named:"icon")
+        
+        guard let image = UIImage(named:"selena") else {
+            return
+        }
+        let data = UIImageJPEGRepresentation(image, 0.9)
+        let uploadImage = CHUploadImage(data!)
+        uploadImage.upload(progressHandle: { (progress) in
+                    print("Upload Progress:\(progress.completedUnitCount)")
+        }) { (result) in
+                if case let .success(response) = result{
+                    print("Upload Response:\(response.jsonString)")
+  
+                }
+        }
+
     }
 }
 extension ViewController:UITableViewDataSource,UITableViewDelegate{
@@ -57,6 +73,8 @@ extension ViewController:UITableViewDataSource,UITableViewDelegate{
             jsonRequest()
         case 2:
             downloadRequest()
+        case 3:
+            uploadRequest()
         default:
             print("do nothing")
         }

@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'CHRequest'
-  s.version          = '0.1.2'
+  s.version          = '0.1.3'
   s.summary          = 'Network framework base on Alamofire in Swift'
 
   s.homepage         = 'https://github.com/chausson/CHRequest'

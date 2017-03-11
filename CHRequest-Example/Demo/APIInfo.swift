@@ -22,7 +22,7 @@ extension SimplerConfigable {
         return ["token":"XXX"]
     }
     var commonParameters:[String :Any]{
-        return ["key":"OOXX"]
+        return ["":""]
     }
 }
 

@@ -12,7 +12,10 @@ import Result
 public typealias ResultType = Result<Response, Error>
 public typealias ResponseHandler = (DefaultDataResponse) -> Void
 public typealias RequestCompletion = (_ result:ResultType)->()
+public typealias UploadCompletion = (UploadRequest) -> Void
 public typealias DownloadCompletion = (Data,URL) -> Void
+public typealias ProgressHandle = (Progress) -> Void
+
 public extension CHRequestable where Self:SimplerConfigable{
     
     
@@ -22,17 +25,7 @@ public extension CHRequestable where Self:SimplerConfigable{
         
         let dataRequest = requestNormal(baseInfo.url, method: self.method, parameters: baseInfo.parms, encoding: self.encoding, headers: baseInfo.headFields)
         
-        let defultResponseHandler:ResponseHandler = { defultResponse  in
-            guard let completionClosure:RequestCompletion = completion else{
-                debugPrint("\n[\(baseInfo.url) Request Finished nothing to do]")
-                return
-            }
-            //返回Response 传入闭包
-            let result =  serializeResponse(defultResponse.response, request: defultResponse.request, data: defultResponse.data, error: defultResponse.error,parm:baseInfo.parms)
-            
-            completionClosure(result)
-            
-        }
+        let defultResponseHandler:ResponseHandler = obtainDefultResponse(baseInfo.url, parms: baseInfo.parms, completion: completion)
         
         dataRequest.response(completionHandler: defultResponseHandler)
         return dataRequest
@@ -55,7 +48,7 @@ public extension CHDownloadRequestable where Self:SimplerConfigable{
             return downloadRequest
         }
         @discardableResult
-        func download(progressClosure:@escaping (Progress) -> Void,_ completion: @escaping  DownloadCompletion) -> DownloadRequest {
+        func download(progressClosure:@escaping ProgressHandle,_ completion: @escaping  DownloadCompletion) -> DownloadRequest {
             let baseInfo = obtainBaseInfo(target:self)
             
             let downloadRequest = downloadNormal(baseInfo.url, method: self.method, parameters: baseInfo.parms, encoding: self.encoding, headers: baseInfo.headFields, fileName: self.fileName).downloadProgress { (progress) in
@@ -74,14 +67,80 @@ public extension CHDownloadRequestable where Self:SimplerConfigable{
 
     
 }
-public extension CHUploadRequestable where Self:CHDownloadRequestable{
+public extension CHUploadDataRequestable where Self:SimplerConfigable{
 
-//    @discardableResult
-//    func upload() -> UploadRequest {
-//        let uploadRequest = uploadNormal()
-//        return uploadRequest
-//
-//    }
+    @discardableResult
+    func upload(progressHandle:@escaping ProgressHandle,_ completion:@escaping RequestCompletion) {
+        let baseInfo = obtainBaseInfo(target:self)
+        uploadNormal({ (multipartFormData) in
+            multipartFormData.append(self.data, withName: self.fileName, mimeType:self.mimeType)
+        }, to: baseInfo.url, encodingMemoryThreshold: self.encodingMemoryThreshold) { (upload) in
+            upload.uploadProgress(closure: { (progress) in
+                progressHandle(progress)
+            }).responseJSON { defultResponse in
+                let result =  serializeResponse(defultResponse.response, request: defultResponse.request, data: defultResponse.data, error: defultResponse.error,parm:baseInfo.parms)
+                
+                completion(result)
+            }
+        }
+        
+    }
+    @discardableResult
+    func upload(_ completion:@escaping RequestCompletion) {
+        let baseInfo = obtainBaseInfo(target:self)
+        uploadNormal({ (multipartFormData) in
+            multipartFormData.append(self.data, withName: self.fileName, mimeType:self.mimeType)
+        }, to: baseInfo.url, encodingMemoryThreshold: self.encodingMemoryThreshold) { (upload) in
+            upload.responseJSON { defultResponse in
+                let result =  serializeResponse(defultResponse.response, request: defultResponse.request, data: defultResponse.data, error: defultResponse.error,parm:baseInfo.parms)
+                
+                completion(result)
+            }
+        }
+        
+    }
+}
+public extension CHUploadFileRequest where Self:SimplerConfigable{
+    
+    @discardableResult
+    func upload(progressHandle:@escaping ProgressHandle,_ completion:@escaping RequestCompletion) -> UploadRequest {
+        let baseInfo = obtainBaseInfo(target:self)
+        let defultResponseHandler:ResponseHandler = obtainDefultResponse(baseInfo.url, parms: baseInfo.parms, completion: completion)
+        let uploadRequest = uploadNormal(self.fileURL, to: baseInfo.url, method: self.method, headers: baseInfo.headFields).uploadProgress { progress in
+            progressHandle(progress)
+            }.response(completionHandler: defultResponseHandler)
+        return uploadRequest
+        
+    }
+    @discardableResult
+    func upload(_ completion:@escaping RequestCompletion) -> UploadRequest {
+        let baseInfo = obtainBaseInfo(target:self)
+        let defultResponseHandler:ResponseHandler = obtainDefultResponse(baseInfo.url, parms: baseInfo.parms, completion: completion)
+        let uploadRequest = uploadNormal(self.fileURL, to: baseInfo.url, method: self.method, headers: baseInfo.headFields).response(completionHandler: defultResponseHandler)
+        return uploadRequest
+        
+    }
+}
+public extension CHUploadStreamRequestable where Self:SimplerConfigable{
+    
+    @discardableResult
+    func upload(progressHandle:@escaping ProgressHandle,_ completion:@escaping RequestCompletion) -> UploadRequest {
+        let baseInfo = obtainBaseInfo(target:self)
+        let defultResponseHandler:ResponseHandler = obtainDefultResponse(baseInfo.url, parms: baseInfo.parms, completion: completion)
+        let uploadRequest = uploadNormal(self.stream, to: baseInfo.url, method: self.method, headers: baseInfo.headFields).uploadProgress { progress in
+            progressHandle(progress)
+            }.response(completionHandler: defultResponseHandler)
+        return uploadRequest
+        
+    }
+    @discardableResult
+    func upload(_ completion:@escaping RequestCompletion) -> UploadRequest {
+        let baseInfo = obtainBaseInfo(target:self)
+        let defultResponseHandler:ResponseHandler = obtainDefultResponse(baseInfo.url, parms: baseInfo.parms, completion: completion)
+        let uploadRequest = uploadNormal(self.stream, to: baseInfo.url, method: self.method, headers: baseInfo.headFields).response(completionHandler: defultResponseHandler)
+        return uploadRequest
+        
+    }
 }
 private func obtainBaseInfo<T:CHRequestable&SimplerConfigable>(target:T)
     -> (url:String,parms:[String :Any],headFields:[String :String]){
@@ -98,7 +157,19 @@ private func obtainBaseInfo<T:CHRequestable&SimplerConfigable>(target:T)
         let headFields:[String :String] = jointDic(target.headers(),target.allHttpHeaderFields) as! [String : String]
         return (url,parms,headFields)
 }
-
+private func obtainDefultResponse(_ url:String,parms:[String:Any],completion:@escaping RequestCompletion)->ResponseHandler{
+    return  { defultResponse  in
+        guard let completionClosure:RequestCompletion = completion else{
+            debugPrint("\n[\(url) Request Finished nothing to do]")
+            return
+        }
+        //返回Response 传入闭包
+        let result =  serializeResponse(defultResponse.response, request: defultResponse.request, data: defultResponse.data, error: defultResponse.error,parm:parms)
+        
+        completionClosure(result)
+        
+    }
+}
 private func jointDic(_ dic:[String:Any], _ otherDic:[String:Any]) -> [String:Any] {
     var newDic:[String :Any] = [String: String]()
     dic.forEach { (key, value) in

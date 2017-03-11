@@ -27,7 +27,22 @@ struct LoginRequest<Type:HandyJSON>:CHHandyRequestable,SimplerConfigable {
 //    var method: HTTPMethod = .post
     var path: String = "basic/country"
 }
-
+struct LoginAPI:CHRequestable,SimplerConfigable {
+    var userName:String?
+    var password:String?
+    
+    init(userName:String,password:String) {
+        self.userName = userName
+        self.password = password
+    }
+    func parameters() -> [String : Any] {
+        let parm = ["userName":userName,
+                    "password":password]
+        return parm
+    }
+    //    var method: HTTPMethod = .post
+    var path: String = "basic/country"
+}
 struct User:HandyJSON{
     var code:Int = 0
     var message:String?

@@ -16,6 +16,7 @@
 		060CEF641E68367C004799E0 /* LoginRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 060CEF611E68367C004799E0 /* LoginRequest.swift */; };
 		060CEF651E68367C004799E0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 060CEF621E68367C004799E0 /* ViewController.swift */; };
 		061215A91E713D8C00403B9C /* DownloadRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 061215A81E713D8C00403B9C /* DownloadRequest.swift */; };
+		061215AB1E7180AE00403B9C /* UploadRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 061215AA1E7180AE00403B9C /* UploadRequest.swift */; };
 		A052234653A8CFF8EB0174D4 /* Pods_CHRequest_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A44AB7FEDA43E48AC30010D7 /* Pods_CHRequest_Example.framework */; };
 /* End PBXBuildFile section */
 
@@ -43,6 +44,7 @@
 		060CEF611E68367C004799E0 /* LoginRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginRequest.swift; sourceTree = "<group>"; };
 		060CEF621E68367C004799E0 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		061215A81E713D8C00403B9C /* DownloadRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadRequest.swift; sourceTree = "<group>"; };
+		061215AA1E7180AE00403B9C /* UploadRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UploadRequest.swift; sourceTree = "<group>"; };
 		41F18231D961B537FF6A7DED /* Pods-CHRequest-Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CHRequest-Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CHRequest-Example/Pods-CHRequest-Example.debug.xcconfig"; sourceTree = "<group>"; };
 		A44AB7FEDA43E48AC30010D7 /* Pods_CHRequest_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CHRequest_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB14F1B0F3ED396BEEA1FC7C /* Pods-CHRequest-Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CHRequest-Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-CHRequest-Example/Pods-CHRequest-Example.release.xcconfig"; sourceTree = "<group>"; };
@@ -116,6 +118,7 @@
 				061215A81E713D8C00403B9C /* DownloadRequest.swift */,
 				060CEF611E68367C004799E0 /* LoginRequest.swift */,
 				060CEF621E68367C004799E0 /* ViewController.swift */,
+				061215AA1E7180AE00403B9C /* UploadRequest.swift */,
 			);
 			path = Demo;
 			sourceTree = "<group>";
@@ -291,6 +294,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				061215AB1E7180AE00403B9C /* UploadRequest.swift in Sources */,
 				060CEF641E68367C004799E0 /* LoginRequest.swift in Sources */,
 				060CEF631E68367C004799E0 /* APIInfo.swift in Sources */,
 				060CEF651E68367C004799E0 /* ViewController.swift in Sources */,

@@ -7,11 +7,9 @@
 //
 
 import Foundation
-//import HandyJSON
 
+/// Request Protocol
 public protocol CHRequestable{
-//    /// return  Object of type
-//    associatedtype R
     
     /// Request Path append path to host
     var path: String { get }
@@ -30,18 +28,7 @@ public protocol CHRequestable{
     
     var encoding:ParameterEncoding { get}
     
-    //    init()
     
-}
-public protocol CHDownloadRequestable:CHRequestable{
-    var fileName: String { get }
-}
-
-public protocol CHUploadRequestable:CHRequestable{
-    
-}
-public protocol CHDownloadResumeRequestable: CHDownloadRequestable {
-    var resumeData: Data { get }
 }
 public extension CHRequestable{
     
@@ -57,7 +44,7 @@ public extension CHRequestable{
             return URLEncoding.default
         default:
             return JSONEncoding.default
-
+            
         }
     }
     func headers() -> [String: String] {
@@ -68,5 +55,60 @@ public extension CHRequestable{
     }
     
 }
+/// Download Protocol
+public protocol CHDownloadRequestable:CHRequestable{
+    var fileName: String { get }
+}
+public protocol CHDownloadResumeRequestable: CHDownloadRequestable {
+    var resumeData: Data { get }
+}
+/// Upload Protocol
+public protocol CHUploadRequestable:CHRequestable{
+}
+public extension CHUploadRequestable{
+    var method: HTTPMethod {
+        return .post
+    }
+    var encoding: ParameterEncoding {
+        return URLEncoding.default
+    }
+}
+public protocol CHUploadDataRequestable:CHUploadRequestable{
+    
+    var fileName: String { get }
+
+    var mimeType: String { get }
+
+    var encodingMemoryThreshold: UInt64 { get }
+    
+    var data: Data { get }
+    
+}
+
+public extension CHUploadDataRequestable {
+    var encodingMemoryThreshold: UInt64 {
+        return 10_000_000
+    }
+    var fileName: String {
+        return "defaultFileName"
+    }
+    var mimeType: String {
+        return "image/png"
+    }
+    var path: String {
+        return ""
+    }
+}
+public protocol CHUploadFileRequest: CHUploadRequestable {
+    var fileURL: URL { get }
+}
+
+/// Conforming to this protocol to create an upload form that contains a stream object
+public protocol CHUploadStreamRequestable: CHUploadRequestable {
+    var stream: InputStream { get }
+}
+
+
+
 
 

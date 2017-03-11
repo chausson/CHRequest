@@ -16,6 +16,7 @@
 		060CEF301E68327B004799E0 /* CHRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 060CEF2D1E68327B004799E0 /* CHRequest.swift */; };
 		060CEF311E68327B004799E0 /* CHRequest+Alamofire.swift in Sources */ = {isa = PBXBuildFile; fileRef = 060CEF2E1E68327B004799E0 /* CHRequest+Alamofire.swift */; };
 		060CEF321E68327B004799E0 /* CHRequest+HandyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 060CEF2F1E68327B004799E0 /* CHRequest+HandyJSON.swift */; };
+		06FF6C331E7241E80015E87F /* CHRequest+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06FF6C321E7241E80015E87F /* CHRequest+Extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,6 +42,7 @@
 		060CEF2D1E68327B004799E0 /* CHRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CHRequest.swift; sourceTree = "<group>"; };
 		060CEF2E1E68327B004799E0 /* CHRequest+Alamofire.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CHRequest+Alamofire.swift"; sourceTree = "<group>"; };
 		060CEF2F1E68327B004799E0 /* CHRequest+HandyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CHRequest+HandyJSON.swift"; sourceTree = "<group>"; };
+		06FF6C321E7241E80015E87F /* CHRequest+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CHRequest+Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +104,7 @@
 		060CEEEB1E682673004799E0 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				06FF6C321E7241E80015E87F /* CHRequest+Extension.swift */,
 				060CEF2D1E68327B004799E0 /* CHRequest.swift */,
 				060CEF2E1E68327B004799E0 /* CHRequest+Alamofire.swift */,
 				060CEF2F1E68327B004799E0 /* CHRequest+HandyJSON.swift */,
@@ -228,6 +231,7 @@
 				060CEF311E68327B004799E0 /* CHRequest+Alamofire.swift in Sources */,
 				060CEF301E68327B004799E0 /* CHRequest.swift in Sources */,
 				060CEEF91E682673004799E0 /* Response.swift in Sources */,
+				06FF6C331E7241E80015E87F /* CHRequest+Extension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

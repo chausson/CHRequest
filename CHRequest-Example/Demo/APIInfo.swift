@@ -8,22 +8,15 @@
 
 import Foundation
 import CHRequest
-
-let config = Config()
-struct Config:SimplerConfigable {
-    
-}
-
-extension SimplerConfigable {
+struct CHAdapter:CHConfigableAdapter {
     var baseURL:String{
         return "http://egarage.dev.sudaotech.com/platform/"
     }
-    var httpHeaderFields:[String :String]{
-        return ["token":"XXX"]
+    var httpHeaderFields: [String: String] {
+        return [:]
     }
-    var commonParameters:[String :Any]{
-        return ["":""]
+    var commonParameters: [String: Any] {
+        return ["key":"OOXX"]
     }
 }
-
 

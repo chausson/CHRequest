@@ -9,7 +9,7 @@
 import Foundation
 import CHRequest
 
-struct ImageDownloadAPI:CHDownloadRequestable,SimplerConfigable {
+struct ImageDownloadAPI:CHDownloadRequestable {
     var path: String = ""
     var customURL: String = "http://img.tuku.com/upload/picture/2015/02/6Y8NxyJ.jpg"
     var fileName: String = "image.jpg"

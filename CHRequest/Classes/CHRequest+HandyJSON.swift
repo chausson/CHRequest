@@ -26,7 +26,7 @@ public final class HandyResponse<Type:HandyJSON>:Response{
     }
     
 }
-public extension CHHandyRequestable where Self:SimplerConfigable{
+public extension CHHandyRequestable{
     @discardableResult
     func requestJSON(_ completion: @escaping (_ result:R?)->()) -> DataRequest{
         let dataRequest = self.request { result in

@@ -18,7 +18,6 @@ class ViewController: UIViewController {
     let data = ["Noraml Request","JSON Reuqest","Download Reuqest","Upload Request"]
     override func viewDidLoad() {
         super.viewDidLoad()
-        config.add(["password":"OOOXXXXX"])
     }
     func normalRequest() {
         lAPI.request { result in
@@ -53,7 +52,7 @@ class ViewController: UIViewController {
         }
         let data = UIImageJPEGRepresentation(image, 0.9)
         let uploadImage = CHUploadImage(data!)
-        uploadImage.upload(progressHandle: { (progress) in
+        uploadImage.upload(progressClosure: { (progress) in
                     print("Upload Progress:\(progress.completedUnitCount)")
         }) { (result) in
                 if case let .success(response) = result{

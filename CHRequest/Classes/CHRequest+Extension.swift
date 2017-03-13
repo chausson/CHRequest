@@ -16,7 +16,7 @@ public typealias UploadCompletion = (UploadRequest) -> Void
 public typealias DownloadCompletion = (Data,URL) -> Void
 public typealias ProgressHandle = (Progress) -> Void
 
-public extension CHRequestable where Self:SimplerConfigable{
+public extension CHRequestable{
     
     
     @discardableResult
@@ -31,29 +31,14 @@ public extension CHRequestable where Self:SimplerConfigable{
         return dataRequest
     }
 }
-public extension CHDownloadRequestable where Self:SimplerConfigable{
+public extension CHDownloadRequestable{
         @discardableResult
-        func download(_ completion: @escaping  DownloadCompletion) -> DownloadRequest {
-            let baseInfo = obtainBaseInfo(target:self)
-    
-            let downloadRequest = downloadNormal(baseInfo.url, method: self.method, parameters: baseInfo.parms, encoding: self.encoding, headers: baseInfo.headFields, fileName: self.fileName).downloadProgress { (progress) in
-                
-            }.responseData { (response) in
-                
-                if let data = response.result.value ,let url = response.destinationURL{
-                    completion(data,url)
-                }
-            }
-    
-            return downloadRequest
-        }
-        @discardableResult
-        func download(progressClosure:@escaping ProgressHandle,_ completion: @escaping  DownloadCompletion) -> DownloadRequest {
+        func download(progressClosure:ProgressHandle? = nil,_ completion: @escaping  DownloadCompletion) -> DownloadRequest {
             let baseInfo = obtainBaseInfo(target:self)
             
             let downloadRequest = downloadNormal(baseInfo.url, method: self.method, parameters: baseInfo.parms, encoding: self.encoding, headers: baseInfo.headFields, fileName: self.fileName).downloadProgress { (progress) in
-                    if progressClosure != nil{
-                        progressClosure(progress)
+                    if let closure = progressClosure{
+                        closure(progress)
                     }
                 }.responseData { (response) in
 
@@ -67,16 +52,18 @@ public extension CHDownloadRequestable where Self:SimplerConfigable{
 
     
 }
-public extension CHUploadDataRequestable where Self:SimplerConfigable{
+public extension CHUploadDataRequestable{
 
     @discardableResult
-    func upload(progressHandle:@escaping ProgressHandle,_ completion:@escaping RequestCompletion) {
+    func upload(progressClosure:ProgressHandle? = nil,_ completion:@escaping RequestCompletion) {
         let baseInfo = obtainBaseInfo(target:self)
         uploadNormal({ (multipartFormData) in
             multipartFormData.append(self.data, withName: self.fileName, mimeType:self.mimeType)
         }, to: baseInfo.url, encodingMemoryThreshold: self.encodingMemoryThreshold) { (upload) in
             upload.uploadProgress(closure: { (progress) in
-                progressHandle(progress)
+                if let closure = progressClosure{
+                    closure(progress)
+                }
             }).responseJSON { defultResponse in
                 let result =  serializeResponse(defultResponse.response, request: defultResponse.request, data: defultResponse.data, error: defultResponse.error,parm:baseInfo.parms)
                 
@@ -85,67 +72,43 @@ public extension CHUploadDataRequestable where Self:SimplerConfigable{
         }
         
     }
-    @discardableResult
-    func upload(_ completion:@escaping RequestCompletion) {
-        let baseInfo = obtainBaseInfo(target:self)
-        uploadNormal({ (multipartFormData) in
-            multipartFormData.append(self.data, withName: self.fileName, mimeType:self.mimeType)
-        }, to: baseInfo.url, encodingMemoryThreshold: self.encodingMemoryThreshold) { (upload) in
-            upload.responseJSON { defultResponse in
-                let result =  serializeResponse(defultResponse.response, request: defultResponse.request, data: defultResponse.data, error: defultResponse.error,parm:baseInfo.parms)
-                
-                completion(result)
-            }
-        }
-        
-    }
 }
-public extension CHUploadFileRequest where Self:SimplerConfigable{
+public extension CHUploadFileRequest{
     
     @discardableResult
-    func upload(progressHandle:@escaping ProgressHandle,_ completion:@escaping RequestCompletion) -> UploadRequest {
+    func upload(progressClosure:ProgressHandle? = nil,_ completion:@escaping RequestCompletion) -> UploadRequest {
         let baseInfo = obtainBaseInfo(target:self)
         let defultResponseHandler:ResponseHandler = obtainDefultResponse(baseInfo.url, parms: baseInfo.parms, completion: completion)
         let uploadRequest = uploadNormal(self.fileURL, to: baseInfo.url, method: self.method, headers: baseInfo.headFields).uploadProgress { progress in
-            progressHandle(progress)
+                if let closure = progressClosure{
+                    closure(progress)
+                }
             }.response(completionHandler: defultResponseHandler)
         return uploadRequest
         
     }
-    @discardableResult
-    func upload(_ completion:@escaping RequestCompletion) -> UploadRequest {
-        let baseInfo = obtainBaseInfo(target:self)
-        let defultResponseHandler:ResponseHandler = obtainDefultResponse(baseInfo.url, parms: baseInfo.parms, completion: completion)
-        let uploadRequest = uploadNormal(self.fileURL, to: baseInfo.url, method: self.method, headers: baseInfo.headFields).response(completionHandler: defultResponseHandler)
-        return uploadRequest
-        
-    }
 }
-public extension CHUploadStreamRequestable where Self:SimplerConfigable{
+public extension CHUploadStreamRequestable{
     
     @discardableResult
-    func upload(progressHandle:@escaping ProgressHandle,_ completion:@escaping RequestCompletion) -> UploadRequest {
+    func upload(progressClosure:ProgressHandle? = nil,_ completion:@escaping RequestCompletion) -> UploadRequest {
         let baseInfo = obtainBaseInfo(target:self)
         let defultResponseHandler:ResponseHandler = obtainDefultResponse(baseInfo.url, parms: baseInfo.parms, completion: completion)
         let uploadRequest = uploadNormal(self.stream, to: baseInfo.url, method: self.method, headers: baseInfo.headFields).uploadProgress { progress in
-            progressHandle(progress)
+                if let closure = progressClosure{
+                    closure(progress)
+                }
             }.response(completionHandler: defultResponseHandler)
         return uploadRequest
         
     }
-    @discardableResult
-    func upload(_ completion:@escaping RequestCompletion) -> UploadRequest {
-        let baseInfo = obtainBaseInfo(target:self)
-        let defultResponseHandler:ResponseHandler = obtainDefultResponse(baseInfo.url, parms: baseInfo.parms, completion: completion)
-        let uploadRequest = uploadNormal(self.stream, to: baseInfo.url, method: self.method, headers: baseInfo.headFields).response(completionHandler: defultResponseHandler)
-        return uploadRequest
-        
-    }
 }
-private func obtainBaseInfo<T:CHRequestable&SimplerConfigable>(target:T)
+private func obtainBaseInfo<T:CHRequestable>(target:T)
     -> (url:String,parms:[String :Any],headFields:[String :String]){
-        
-        var url = target.baseURL+target.path
+        var url = ""
+        if let baseURL = CHRequestAdapter.instance.configuration?.baseURL {
+            url = baseURL+target.path
+        }
         if  target.customURL.characters.count > 0{
             url = target.customURL
         }
@@ -153,8 +116,8 @@ private func obtainBaseInfo<T:CHRequestable&SimplerConfigable>(target:T)
             debugPrint("[Warning Request of URL is not valid]")
         }
         // 拼接Config中的基础参数
-        let parms:[String :Any] = jointDic(target.parameters(),target.allParameters)
-        let headFields:[String :String] = jointDic(target.headers(),target.allHttpHeaderFields) as! [String : String]
+        let parms:[String :Any] = jointDic(target.parameters(),CHRequestAdapter.instance.allParameters)
+        let headFields:[String :String] = jointDic(target.headers(),CHRequestAdapter.instance.allHttpHeaderFields) as! [String : String]
         return (url,parms,headFields)
 }
 private func obtainDefultResponse(_ url:String,parms:[String:Any],completion:@escaping RequestCompletion)->ResponseHandler{

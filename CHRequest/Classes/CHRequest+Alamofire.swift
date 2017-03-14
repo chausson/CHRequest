@@ -19,12 +19,6 @@ public typealias UploadRequest = Alamofire.UploadRequest
 public typealias MultipartFormData = Alamofire.MultipartFormData
 public typealias DefaultDataResponse = Alamofire.DefaultDataResponse
 
-private let CHRequest:SessionManager = {
-    let sessionManager = SessionManager.default
-    sessionManager.adapter = CHRequestAdapter.instance
-    return sessionManager
-}()
-
 public func requestNormal(
     _ url: URLConvertible,
     method: HTTPMethod = .get,
@@ -33,7 +27,7 @@ public func requestNormal(
     headers: HTTPHeaders? = nil)
     -> DataRequest
 {
-    return CHRequest.request(
+    return SessionManager.default.request(
         url,
         method: method,
         parameters: parameters,
@@ -57,7 +51,7 @@ public func downloadNormal(
         let fileURL = documentsURL.appendPathComponent(fileName)
         return (documentsURL, [.removePreviousFile, .createIntermediateDirectories])
     }
-    return  CHRequest.download(url, method: method, parameters: parameters, encoding: encoding, headers: headers, to: destination)
+    return  SessionManager.default.download(url, method: method, parameters: parameters, encoding: encoding, headers: headers, to: destination)
 }
 public func uploadNormal(
     _ data:Data,
@@ -71,7 +65,7 @@ public func uploadNormal(
         multipartFormData.append(data, withName: "name", fileName: "fileName", mimeType: "image/png")
         
     }
-    return CHRequest.upload(data, to: url, method: method, headers: headers)
+    return SessionManager.default.upload(data, to: url, method: method, headers: headers)
 }
 public func uploadNormal(
     _ fielURL:URL,
@@ -81,7 +75,7 @@ public func uploadNormal(
     headers: HTTPHeaders? = nil)
     -> UploadRequest
 {
-    return CHRequest.upload(fielURL, to: url, method: method, headers: headers )
+    return SessionManager.default.upload(fielURL, to: url, method: method, headers: headers )
 }
 public func uploadNormal(
     _ stream:InputStream,
@@ -91,8 +85,8 @@ public func uploadNormal(
     headers: HTTPHeaders? = nil)
     -> UploadRequest
 {
-
-    return CHRequest.upload(stream, to: url, method: method, headers: headers)
+    
+    return SessionManager.default.upload(stream, to: url, method: method, headers: headers)
 }
 public func uploadNormal(
     _ multipartFormData:@escaping (MultipartFormData) -> Void,
@@ -103,11 +97,11 @@ public func uploadNormal(
     headers: HTTPHeaders? = nil,
     completion: ((UploadRequest) -> Void)?)
 {
-     CHRequest.upload(multipartFormData: multipartFormData, usingThreshold: encodingMemoryThreshold, to: url, method:method, headers: headers, encodingCompletion: { (encodingResult) in
+    SessionManager.default.upload(multipartFormData: multipartFormData, usingThreshold: encodingMemoryThreshold, to: url, method:method, headers: headers, encodingCompletion: { (encodingResult) in
         switch encodingResult {
         case .success(let upload, _, _):
             completion?(upload)
-         
+            
             break
         case .failure(let encodingError):
             debugPrint(encodingError)

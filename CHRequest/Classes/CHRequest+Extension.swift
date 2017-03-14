@@ -16,7 +16,7 @@ public typealias UploadCompletion = (UploadRequest) -> Void
 public typealias DownloadCompletion = (Data,URL) -> Void
 public typealias ProgressHandle = (Progress) -> Void
 
-public extension CHRequestable{
+public extension CHRequestable where Self:CHRequestAdapter{
     
     
     @discardableResult
@@ -31,7 +31,7 @@ public extension CHRequestable{
         return dataRequest
     }
 }
-public extension CHDownloadRequestable{
+public extension CHDownloadRequestable where Self:CHRequestAdapter{
         @discardableResult
         func download(progressClosure:ProgressHandle? = nil,_ completion: @escaping  DownloadCompletion) -> DownloadRequest {
             let baseInfo = obtainBaseInfo(target:self)
@@ -52,7 +52,7 @@ public extension CHDownloadRequestable{
 
     
 }
-public extension CHUploadDataRequestable{
+public extension CHUploadDataRequestable where Self:CHRequestAdapter{
 
     @discardableResult
     func upload(progressClosure:ProgressHandle? = nil,_ completion:@escaping RequestCompletion) {
@@ -73,7 +73,7 @@ public extension CHUploadDataRequestable{
         
     }
 }
-public extension CHUploadFileRequest{
+public extension CHUploadFileRequest  where Self:CHRequestAdapter{
     
     @discardableResult
     func upload(progressClosure:ProgressHandle? = nil,_ completion:@escaping RequestCompletion) -> UploadRequest {
@@ -88,7 +88,7 @@ public extension CHUploadFileRequest{
         
     }
 }
-public extension CHUploadStreamRequestable{
+public extension CHUploadStreamRequestable  where Self:CHRequestAdapter{
     
     @discardableResult
     func upload(progressClosure:ProgressHandle? = nil,_ completion:@escaping RequestCompletion) -> UploadRequest {
@@ -103,12 +103,10 @@ public extension CHUploadStreamRequestable{
         
     }
 }
-private func obtainBaseInfo<T:CHRequestable>(target:T)
+private func obtainBaseInfo<T:CHRequestable&CHRequestAdapter>(target:T)
     -> (url:String,parms:[String :Any],headFields:[String :String]){
-        var url = ""
-        if let baseURL = CHRequestAdapter.instance.configuration?.baseURL {
-            url = baseURL+target.path
-        }
+        var url = target.baseURL+target.path
+
         if  target.customURL.characters.count > 0{
             url = target.customURL
         }
@@ -116,8 +114,8 @@ private func obtainBaseInfo<T:CHRequestable>(target:T)
             debugPrint("[Warning Request of URL is not valid]")
         }
         // 拼接Config中的基础参数
-        let parms:[String :Any] = jointDic(target.parameters(),CHRequestAdapter.instance.allParameters)
-        let headFields:[String :String] = jointDic(target.headers(),CHRequestAdapter.instance.allHttpHeaderFields) as! [String : String]
+        let parms:[String :Any] = jointDic(target.parameters(),target.allParameters)
+        let headFields:[String :String] = jointDic(target.headers(),target.allHttpHeaderFields) as! [String : String]
         return (url,parms,headFields)
 }
 private func obtainDefultResponse(_ url:String,parms:[String:Any],completion:@escaping RequestCompletion)->ResponseHandler{

@@ -9,7 +9,7 @@
 import Foundation
 import CHRequest
 
-struct CHUploadImage:CHUploadDataRequestable {
+struct CHUploadImage:CHUploadDataRequestable,CHRequestAdapter {
     var data: Data
     
     init(_ data:Data) {

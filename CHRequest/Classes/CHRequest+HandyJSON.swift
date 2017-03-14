@@ -10,7 +10,7 @@ import Foundation
 import HandyJSON
 import Result
 
-public protocol CHHandyRequestable:CHRequestable{
+public protocol CHHandyRequestable:CHRequestable,CHRequestAdapter{
     associatedtype R:HandyJSON
     
 }
@@ -26,7 +26,7 @@ public final class HandyResponse<Type:HandyJSON>:Response{
     }
     
 }
-public extension CHHandyRequestable{
+public extension CHHandyRequestable where Self:CHRequestAdapter{
     @discardableResult
     func requestJSON(_ completion: @escaping (_ result:R?)->()) -> DataRequest{
         let dataRequest = self.request { result in

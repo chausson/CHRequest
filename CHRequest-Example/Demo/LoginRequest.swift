@@ -27,7 +27,7 @@ struct LoginRequest<Type:HandyJSON>:CHHandyRequestable {
 //    var method: HTTPMethod = .post
     var path: String = "basic/country"
 }
-struct LoginAPI:CHRequestable {
+struct LoginAPI:CHRequestable ,CHRequestAdapter{
     var userName:String?
     var password:String?
     

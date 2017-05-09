@@ -59,7 +59,7 @@ public extension CHUploadDataRequestable where Self:CHRequestAdapter{
         let baseInfo = obtainBaseInfo(target:self)
         uploadNormal({ (multipartFormData) in
             multipartFormData.append(self.data, withName: self.fileName, mimeType:self.mimeType)
-        }, to: baseInfo.url, encodingMemoryThreshold: self.encodingMemoryThreshold) { (upload) in
+        }, to: baseInfo.url, encodingMemoryThreshold: self.encodingMemoryThreshold, method: self.method, headers: baseInfo.headFields) { (upload) in
             upload.uploadProgress(closure: { (progress) in
                 if let closure = progressClosure{
                     closure(progress)

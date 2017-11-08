@@ -37,7 +37,7 @@ public class Response:CustomDebugStringConvertible,Equatable{
     }
     
     public var description: String {
-        return "\n[Request Path: \(self.request?.url?.absoluteString)],\n[Request Parm : \(self.requestParm)],\n[Status Code :\(statusCode)]"
+        return "\n[Request Path: \(String(describing: self.request?.url?.absoluteString))],\n[Request Parm : \(String(describing: self.requestParm))],\n[Status Code :\(statusCode)]"
     }
     
     public var debugDescription: String {

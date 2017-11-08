@@ -22,7 +22,7 @@ class ViewController: UIViewController {
     func normalRequest() {
         lAPI.request { result in
             if case let .success(response) = result {
-                print("\nStr = \(response.jsonString)")
+                print("\nStr = \(String(describing: response.jsonString))")
             }
             if case let .failure(error) = result{
                 print("\nDebug = \(error.response.debugDescription)")
@@ -32,7 +32,7 @@ class ViewController: UIViewController {
     }
     func jsonRequest() {
         lRequest.requestJSON { user in
-            print("\nUser = \(user)")
+            print("\nUser = \(String(describing: user))")
         }
     }
     func downloadRequest() {
@@ -56,7 +56,7 @@ class ViewController: UIViewController {
                     print("Upload Progress:\(progress.completedUnitCount)")
         }) { (result) in
                 if case let .success(response) = result{
-                    print("Upload Response:\(response.jsonString)")
+                    print("Upload Response:\(String(describing: response.jsonString))")
   
                 }
         }

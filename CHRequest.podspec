@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'CHRequest'
-  s.version          = '0.1.6'
+  s.version          = '0.1.7'
   s.summary          = 'Network framework base on Alamofire in Swift'
 
   s.homepage         = 'https://github.com/chausson/CHRequest'
@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
   s.source_files = 'CHRequest/Classes/**/*'
   # s.resources = 'CHNetwork/Assets/**/*'
   
-  s.dependency 'HandyJSON', '~> 1.6.0'
+  s.dependency 'HandyJSON'
   s.dependency 'Result'
-  s.dependency 'Alamofire', '~> 4.1'
+  s.dependency 'Alamofire'
 end

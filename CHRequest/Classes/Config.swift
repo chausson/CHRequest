@@ -38,12 +38,12 @@ public extension CHRequestAdapter{
 }
 public extension CHRequestAdapter{
     @discardableResult
-    func add( httpHeaderFields:[String: String]) -> CHRequestAdapter? {
+    func add( httpHeaderFields:[String: String]?) -> CHRequestAdapter? {
         guard let headers:[String:String] = httpHeaderFields, headers.isEmpty == false else {
             return nil
         }
         
-        var newHeaders = allHttpHeaderFields ?? [String: String]()
+        var newHeaders = allHttpHeaderFields
         headers.forEach { (key, value) in
             newHeaders[key] = value
         }

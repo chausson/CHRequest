@@ -48,7 +48,7 @@ public func downloadNormal(
     let destination: DownloadRequest.DownloadFileDestination = { _, _ in
         var documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
         
-        let fileURL = documentsURL.appendPathComponent(fileName)
+        _ = documentsURL.appendPathComponent(fileName)
         return (documentsURL, [.removePreviousFile, .createIntermediateDirectories])
     }
     return  SessionManager.default.download(url, method: method, parameters: parameters, encoding: encoding, headers: headers, to: destination)
@@ -61,7 +61,7 @@ public func uploadNormal(
     headers: HTTPHeaders? = nil)
     -> UploadRequest
 {
-    var multipartFormData: (MultipartFormData) -> Void = { multipartFormData in
+    var _: (MultipartFormData) -> Void = { multipartFormData in
         multipartFormData.append(data, withName: "name", fileName: "fileName", mimeType: "image/png")
         
     }
